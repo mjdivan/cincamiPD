@@ -35,6 +35,7 @@ import org.ciedayap.pabmm.pd.measurement.Unit;
 import org.ciedayap.pabmm.pd.requirements.Attribute;
 import org.ciedayap.pabmm.pd.requirements.Attributes;
 import org.ciedayap.pabmm.pd.requirements.CalculableConcept;
+import org.ciedayap.pabmm.pd.requirements.CalculableConcepts;
 import org.ciedayap.pabmm.pd.requirements.ConceptModel;
 import org.ciedayap.pabmm.pd.requirements.ConceptModels;
 import org.ciedayap.pabmm.pd.requirements.Entities;
@@ -264,11 +265,14 @@ public class test {
         //15. Defining the calculable concept
         CalculableConcept calcon=CalculableConcept.create("calcon1", "Health");
         calcon.setRepresentedBy(myCMs);
+        CalculableConcepts concepts=new CalculableConcepts();
+        concepts.getCalculableConcepts().add(calcon);
 
         //16. Defining the Information
         InformationNeed IN_1=InformationNeed.create("IN_1", "Monitor the Outpatient", 
                 "Avoid severe damages through the prevention of risks with direct impact in the outpatient health", 
                 ecat, ctxOutpatient);
+        IN_1.setDescribedBy(concepts);
                                         
         //17. Defining the Measurement Project
         MeasurementProject PRJ_1=MeasurementProject.create("PRJ_1","Outpatient Monitoring", ZonedDateTime.now(), IN_1, ZonedDateTime.now());
