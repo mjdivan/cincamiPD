@@ -211,11 +211,13 @@ public class test {
         Metrics heartMetrics=new Metrics();
         heartMetrics.getRelated().add(dm_heart);
         Attribute at_heart=Attribute.create("heartrate","The Heart Rate", heartMetrics);
+        at_heart.setDefinition("Number of beats per minute (bpm)");
         at_heart.setIndicator(ind_heartRate);
         
         Metrics corpTempMetrics=new Metrics();
         corpTempMetrics.getRelated().add(dm_ctemp);
         Attribute at_ctemp=Attribute.create("ctemp", "The Corporal Temperature", corpTempMetrics);
+        at_ctemp.setDefinition("Value of the axilar temperature in Celsius degree");
         at_ctemp.setIndicator(ind_corpTemp);
         
         Attributes describedBy=new Attributes();
@@ -226,16 +228,19 @@ public class test {
         Metrics envHumMetrics=new Metrics();
         envHumMetrics.getRelated().add(dm_pc_humi);
         ContextProperty cp_humi=ContextProperty.create("pc_humi", "The Environmental Humidity", envHumMetrics);
+        cp_humi.setDefinition("Amount of the water vapor in the air");
         cp_humi.setIndicator(ind_env_humidity);
                           
         Metrics envTempMetrics=new Metrics();
         envTempMetrics.getRelated().add(dm_pc_temp);
         ContextProperty cp_temp=ContextProperty.create("pc_temp", "The Environmental Temperature", envTempMetrics);
+        cp_temp.setDefinition("Value of the environmental temperature in Celsius degree");
         cp_temp.setIndicator(ind_env_temp);
         
         Metrics envPressMetrics=new Metrics();
         envPressMetrics.getRelated().add(dm_pc_press);
         ContextProperty cp_press=ContextProperty.create("pc_press", "The Environmental Pressure", envPressMetrics);
+        cp_press.setDefinition("Pressures resulting from human activities which bring about changes in the state of the environment");
         cp_press.setIndicator(ind_env_press);
         
         //11. Definint the Context
