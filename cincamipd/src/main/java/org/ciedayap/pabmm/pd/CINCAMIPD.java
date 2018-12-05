@@ -49,6 +49,7 @@ public class CINCAMIPD implements Serializable,SingleConcept{
         version="1.0";
         creation=java.time.ZonedDateTime.now();
         projects=new MeasurementProjects();
+        IDMessage="1";
     }
     
     /**
