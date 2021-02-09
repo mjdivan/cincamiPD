@@ -22,7 +22,7 @@ import org.ciedayap.utils.TranslateXML;
 /**
  * It describes a interval to be considered in restrictions applied to data sources.
  * @author Mario Divan
- * @Version 1.0
+ * @version 1.0
  */
 @XmlRootElement(name="Range")
 @XmlType(propOrder={"IDRange","minValue","minValueIncluded","maxValue","maxValueIncluded"})

@@ -21,7 +21,7 @@ import org.ciedayap.utils.StringUtils;
 @XmlType(propOrder={"projectID","scenarios","ecstates","weightedindicators"})
 public class SSAProject implements Serializable, SingleConcept {
     /**
-     * It is the unique identification for the M&E project
+     * It is the unique identification for the M and E project
      */
     private String projectID;
     /**
