@@ -125,7 +125,7 @@ public class CINCAMIPD_SSA implements Serializable,SingleConcept{
     /**
      * @return the creation
      */
-    @XmlAttribute(name="creation", required=true)
+    @XmlAttribute(name="creation", required=true)   
     @XmlJavaTypeAdapter(ZonedDateTimeAdapter.class)     
     public java.time.ZonedDateTime getCreation() {
         return creation;

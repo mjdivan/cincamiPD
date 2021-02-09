@@ -13,6 +13,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.ciedayap.cincamimis.adapters.ZonedDateTimeAdapter;
+import org.ciedayap.pabmm.pd.context.ContextProperty;
+import org.ciedayap.pabmm.pd.measurement.Metric;
+import org.ciedayap.pabmm.pd.requirements.Attribute;
 import org.ciedayap.utils.StringUtils;
 
 /**
@@ -71,7 +74,7 @@ public class CINCAMIPD implements Serializable,SingleConcept{
     {
         CINCAMIPD var=create();
         
-        if(var==null || var.getProjects()==null || var.getProjects().getProjects()==null) return null;
+        if(var==null || var.getProjects()==null || var.getProjects()==null) return null;
         
         var.getProjects().setProjects(list);
         
@@ -176,4 +179,103 @@ public class CINCAMIPD implements Serializable,SingleConcept{
     public void setIDMessage(String IDMessage) {
         this.IDMessage = IDMessage;
     }
+    
+    /**
+     * It extracts from the project definition the list of strings under the expected format for detector
+     * @param definition The project definition message
+     * @param projectID The specific project ID to be extracted
+     * @return An ArrayList instance containing the set of string under the format "attributeID;metricID;weighting"
+     */
+    public static ArrayList<String> toDetectorInitializationList(CINCAMIPD definition, String projectID)
+    {
+        if(definition==null || projectID==null || projectID.trim().length()==0) return null;
+        if(definition.getProjects()==null || definition.getProjects().getProjects()==null ||
+                definition.getProjects().getProjects().isEmpty()) return null;
+        MeasurementProject proj=null;
+        for(MeasurementProject item:definition.getProjects().getProjects())
+        {
+            if(item!=null && item.getID()!=null && item.getID().equalsIgnoreCase(projectID))
+            {
+                proj=item;
+                break;
+            }
+        }
+        
+        if(proj==null) return null;
+        
+        if(proj.getInfneed()==null || proj.getInfneed().getSpecifiedEC()==null ||
+                proj.getInfneed().getSpecifiedEC().getDescribedBy()==null ||
+                proj.getInfneed().getSpecifiedEC().getDescribedBy().getCharacteristics()==null ||
+                proj.getInfneed().getSpecifiedEC().getDescribedBy().getCharacteristics().isEmpty()) return null;
+        
+        if( proj.getInfneed().getCharacterizedBy()==null ||
+                     proj.getInfneed().getCharacterizedBy().getDescribedBy()==null ||
+                     proj.getInfneed().getCharacterizedBy().getDescribedBy().getContextProperties()==null ||
+                     proj.getInfneed().getCharacterizedBy().getDescribedBy().getContextProperties().isEmpty()) return null;        
+        int qtotal=proj.getInfneed().getSpecifiedEC().getDescribedBy().getCharacteristics().size()+
+                   proj.getInfneed().getCharacterizedBy().getDescribedBy().getContextProperties().size();
+       
+        String met[]=new String[qtotal];
+        String arratt[]=new String[qtotal];
+        double prob[]=new double[qtotal];
+                        
+        boolean someNull=false;
+        //Attributes Loop
+        int i=0;
+        for(Attribute att:proj.getInfneed().getSpecifiedEC().getDescribedBy().getCharacteristics())
+        {
+            arratt[i]=att.getID();
+            if(att.getQuantifiedBy()==null || att.getQuantifiedBy().getRelated()==null ||
+                    att.getQuantifiedBy().getRelated().isEmpty()) return null;
+            Metric m=att.getQuantifiedBy().getRelated().get(0);
+            if(m.getIDmetric()==null || m.getIDmetric().trim().length()==0) return null;
+            met[i]=m.getIDmetric();
+            
+            if(att.getWeight()==null) 
+            {
+                someNull=true;
+            }
+            else
+                prob[i]=att.getWeight().doubleValue();
+
+            i++;
+        }
+        
+        if( proj.getInfneed().getCharacterizedBy()==null ||
+                proj.getInfneed().getCharacterizedBy().getDescribedBy()==null ||
+                proj.getInfneed().getCharacterizedBy().getDescribedBy().getContextProperties()==null ||
+                proj.getInfneed().getCharacterizedBy().getDescribedBy().getContextProperties().isEmpty()) return null;
+        //Context Properties Loop
+        for(ContextProperty cp:proj.getInfneed().getCharacterizedBy().getDescribedBy().getContextProperties())
+        {
+            arratt[i]=cp.getID();
+            if(cp.getQuantifiedBy()==null || cp.getQuantifiedBy().getRelated()==null ||
+                    cp.getQuantifiedBy().getRelated().isEmpty()) return null;
+            met[i]=cp.getQuantifiedBy().getRelated().get(0).getIDmetric();
+            if(cp.getWeight()==null) someNull=true;
+            else prob[i]=cp.getWeight().doubleValue();
+            
+            i++;
+        }
+        
+        ArrayList mylist=new ArrayList(qtotal);
+        double sameProb=1.0/((double)qtotal);
+        StringBuilder sb=new StringBuilder();
+        for(i=0;i<arratt.length;i++)
+        {
+            sb.delete(0, sb.length());
+            sb.append(arratt[i]).append(";")
+              .append(met[i]).append(";");
+            
+            if(someNull)
+              sb.append(sameProb);
+            else
+              sb.append(prob[i]);
+            
+            mylist.add(sb.toString());
+        }
+        
+        return mylist;
+    }
+            
 }

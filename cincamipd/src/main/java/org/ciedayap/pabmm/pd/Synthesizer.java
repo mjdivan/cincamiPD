@@ -138,6 +138,7 @@ public class Synthesizer {
         //Entity Category
         for(Attribute att:atts.getCharacteristics())
         {
+            System.out.println("Att: "+att.getName()+" W: "+att.getWeight());
             for(Metric met:att.getQuantifiedBy().getRelated())
             {
                 if(StringUtils.isEmpty(att.getID()) || StringUtils.isEmpty(met.getIDmetric()))

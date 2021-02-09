@@ -110,7 +110,7 @@ public class DecisionCriterion implements Serializable, SingleConcept, Comparabl
      * @return A new DecisionCriterion´s instance, null otherwise
      * @throws EntityPDException It is raised when some mandatory attribute is not defined or it is contradictory in relation its own definition.
      */
-    public static DecisionCriterion create(String id,String name,BigDecimal lowerT, BigDecimal upperT) throws EntityPDException
+    public static synchronized DecisionCriterion create(String id,String name,BigDecimal lowerT, BigDecimal upperT) throws EntityPDException
     {
         return new DecisionCriterion(id,name,lowerT,upperT);
     }
